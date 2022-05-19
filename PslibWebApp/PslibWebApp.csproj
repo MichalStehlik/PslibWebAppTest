@@ -40,6 +40,8 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\components\" />
+    <Folder Include="ClientApp\src\assets\" />
+    <Folder Include="ClientApp\src\ui-components\" />
     <Folder Include="Logs\" />
   </ItemGroup>
 
