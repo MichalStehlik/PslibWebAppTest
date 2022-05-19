@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PslibWebApp.Controllers;
 using PslibWebApp.Data;
 using PslibWebApp.Services;
 using Serilog;
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
+builder.Services.AddOptions();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddAuthorization(options => { });
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options => {
@@ -28,6 +30,9 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options => {
     options.RequireHttpsMetadata = true;
     options.Audience = "TestApi";
 });
+builder.Services.Configure<ClientConfigurationOptions>(
+    builder.Configuration.GetSection("Client")
+);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews().AddNewtonsoftJson();

@@ -6,12 +6,18 @@ export const ADD_MESSAGE = "ADD_MESSAGE";
 export const DISMISS_MESSAGE = "DISMISS_MESSAGE";
 export const CLEAR_MESSAGES = "CLEAR_MESSAGES";
 export const SET_THEME = "SET_THEME";
+export const SET_APPLICATION_BUSY = "SET_APPLICATION_BUSY";
+export const SET_APPLICATION_BUSY_MESSAGE = "SET_APPLICATION_BUSY_MESSAGE";
+export const SET_APPLICATION_CONFIGURATION = "SET_APPLICATION_CONFIGURATION";
 
 const initialState = {
     title: null,
     messages: [],
     messageCounter: 0,
-    theme: "light"
+    theme: "light",
+    applicationBusy: false,
+    applicationBusyMessage: "",
+    config: null
 }
 
 const reducer = (state, action) => {
@@ -27,17 +33,29 @@ const reducer = (state, action) => {
                 dismissible: action.dismissible === true,
                 expiration: action.expiration ? action.expiration : null
             });
-            return { ...state, messages: newMessages, messageCounter: state.messageCounter + 1 };
+            return { ...state, messages: newMessages, messageCounter: newMessages.length };
         }
         case DISMISS_MESSAGE: {
             newMessages.splice(action.id, 1);
-            return { ...state, messages: newMessages, messageCounter: state.messageCounter - 1 };
+            return { ...state, messages: newMessages, messageCounter: newMessages.length };
         }
         case CLEAR_MESSAGES: {
             return { ...state, messages: [], messageCounter: 0 };
         }
         case SET_TITLE: {
             return { ...state, title: action.payload };
+        }
+        case SET_APPLICATION_BUSY: {
+            return { ...state, applicationBusy: action.payload };
+        }
+        case SET_APPLICATION_BUSY_MESSAGE: {
+            return { ...state, applicationBusyMessage: action.payload };
+        }
+        case SET_APPLICATION_CONFIGURATION: {
+            return { ...state, config: action.payload };
+        }
+        default: {
+            return state;
         }
     }
 }
@@ -50,6 +68,15 @@ export const ApplicationProvider = props => {
         initialState
     );
     const [, dispatch] = store;
+    useEffect(() => {
+        dispatch({ type: SET_APPLICATION_BUSY, payload: true });
+        axios.get("/api/configuration")
+            .then(response => {
+                dispatch({ type: SET_APPLICATION_CONFIGURATION, payload: response.data });
+                console.log(response.data);
+            })
+        dispatch({ type: SET_APPLICATION_BUSY, payload: false });
+    }, [dispatch]);
     return (
         <ApplicationContext.Provider value={store}>
             {props.children}

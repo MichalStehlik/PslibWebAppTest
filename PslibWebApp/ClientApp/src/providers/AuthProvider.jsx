@@ -1,7 +1,8 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
 import { UserManager, WebStorageStateStore, Log } from "oidc-client";
-import { IDENTITY_CONFIGURATION, METADATA_OIDC } from "../configuration/authorization";
+import { useAppContext, ADD_MESSAGE } from "./ApplicationProvider";
 
+export const SET_USER_MANAGER = "SET_USER_MANAGER";
 export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
 export const CLEAR_ACCESS_TOKEN = "CLEAR_ACCESS_TOKEN";
 export const SET_ID_TOKEN = "SET_ID_TOKEN";
@@ -18,6 +19,7 @@ export const SET_THEME = "SET_THEME";
 export const SET_ICON = "SET_ICON";
 
 const userStore = window.localStorage;
+/*
 const userManager = new UserManager({
     ...IDENTITY_CONFIGURATION,
     userStore: new WebStorageStateStore({ store: userStore }),
@@ -25,9 +27,7 @@ const userManager = new UserManager({
         ...METADATA_OIDC
     }
 });
-
-Log.logger = console;
-Log.level = /*Log.ERROR;*/ Log.DEBUG;
+*/
 
 const parseJwt = token => {
     const base64Url = token.split(".")[1];
@@ -58,6 +58,8 @@ const reducer = (state, action) => {
         case SET_ICON: {
             return { ...state, profileIcon: action.icon, profileIconType: action.iconType };
         }
+        case SET_USER_MANAGER:
+            return { ...state, userManager: action.payload }
         default: {
             return state;
         }
@@ -65,7 +67,7 @@ const reducer = (state, action) => {
 }
 
 const initialState = {
-    userManager: userManager,
+    userManager: null,
     accessToken: null,
     idToken: null,
     userId: null,
@@ -76,66 +78,78 @@ const initialState = {
 export const AuthContext = createContext(initialState);
 export const AuthConsumer = AuthContext.Consumer;
 export const AuthProvider = props => {
+    const [{ config }, appDispatch] = useAppContext();
     const store = useReducer(
         reducer,
         initialState
     );
     const [, dispatch] = store;
     useEffect(() => {
-        userManager.events.addUserLoaded(user => {
-            const tokenData = parseJwt(user.access_token);
-            dispatch({
-                type: USER_FOUND,
-                accessToken: user.access_token,
-                idToken: user.id_token,
-                userId: tokenData.sub,
-                profile: user.profile
-            });
-            console.info("Uživatel byl pøihlášen");
-        });
-        userManager.events.addUserUnloaded(() => {
-            dispatch({ type: USER_EXPIRED });
-            console.info("Informace o pøihlášení jsou neplatné.");
-        });
-        userManager.events.addAccessTokenExpiring(() => {
-            dispatch({ type: USER_EXPIRING });
-            console.info("Platnost pøihlášení brzy vyprší.");
-        });
-        userManager.events.addAccessTokenExpired(() => {
-            dispatch({ type: USER_EXPIRED });
-            console.info("Platnost pøihlášení vypršela.");
-        });
-        userManager.events.addSilentRenewError(() => {
-            dispatch({ type: SILENT_RENEW_ERROR });
-            console.info("Nepodaøilo se obnovit pøihlášení.");
-        });
-        userManager.events.addUserSignedOut(() => {
-            dispatch({ type: USER_EXPIRED });
-            console.info("Uživatel byl odhlášen.");
-        });
-        userManager.getUser()
-            .then((user) => {
-                if (user && !user.expired) {
-                    let tokenData = parseJwt(user.access_token);
-                    dispatch({
-                        type: USER_FOUND,
-                        accessToken: user.access_token,
-                        idToken: user.id_token,
-                        userId: tokenData.sub,
-                        profile: user.profile
-                    });
-                } else if (!user || (user && user.expired)) {
-                    dispatch({
-                        type: USER_EXPIRED
-                    });
-                }
-            })
-            .catch(() => {
+        if (config !== null) {
+            let extendedConfig = {
+                ...config,
+                userStore: new WebStorageStateStore({ store: userStore }),
+            }
+            let userManager = new UserManager(extendedConfig);
+            Log.logger = console;
+            Log.level = /*Log.ERROR;*/ Log.DEBUG;
+            userManager.events.addUserLoaded(user => {
+                const tokenData = parseJwt(user.access_token);
                 dispatch({
-                    type: LOAD_USER_ERROR
+                    type: USER_FOUND,
+                    accessToken: user.access_token,
+                    idToken: user.id_token,
+                    userId: tokenData.sub,
+                    profile: user.profile
                 });
+                console.info("Uživatel byl pøihlášen");
             });
-    }, [dispatch]);
+            userManager.events.addUserUnloaded(() => {
+                dispatch({ type: USER_EXPIRED });
+                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Informace o pøihlášení jsou neplatné.", dismissible: true, expiration: 3 });
+                console.info("Informace o pøihlášení jsou neplatné.");
+            });
+            userManager.events.addAccessTokenExpiring(() => {
+                dispatch({ type: USER_EXPIRING });
+                console.info("Platnost pøihlášení brzy vyprší.");
+            });
+            userManager.events.addAccessTokenExpired(() => {
+                dispatch({ type: USER_EXPIRED });
+                console.info("Platnost pøihlášení vypršela.");
+            });
+            userManager.events.addSilentRenewError(() => {
+                dispatch({ type: SILENT_RENEW_ERROR });
+                console.info("Nepodaøilo se obnovit pøihlášení.");
+            });
+            userManager.events.addUserSignedOut(() => {
+                dispatch({ type: USER_EXPIRED });
+                console.info("Uživatel byl odhlášen.");
+            });
+            userManager.getUser()
+                .then((user) => {
+                    if (user && !user.expired) {
+                        let tokenData = parseJwt(user.access_token);
+                        dispatch({
+                            type: USER_FOUND,
+                            accessToken: user.access_token,
+                            idToken: user.id_token,
+                            userId: tokenData.sub,
+                            profile: user.profile
+                        });
+                    } else if (!user || (user && user.expired)) {
+                        dispatch({
+                            type: USER_EXPIRED
+                        });
+                    }
+                })
+                .catch(() => {
+                    dispatch({
+                        type: LOAD_USER_ERROR
+                    });
+                });
+            dispatch({ type: SET_USER_MANAGER, payload: userManager });
+        }   
+    }, [config, dispatch, appDispatch]);
     return (
         <AuthContext.Provider value={store}>
             {props.children}
