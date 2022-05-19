@@ -36,7 +36,6 @@ const parseJwt = token => {
 };
 
 const reducer = (state, action) => {
-    var newMessages = [...state.messages];
     switch (action.type) {
         case LOADING_USER:
             return { ...state, isUserLoading: true }
@@ -82,6 +81,61 @@ export const AuthProvider = props => {
         initialState
     );
     const [, dispatch] = store;
+    useEffect(() => {
+        userManager.events.addUserLoaded(user => {
+            const tokenData = parseJwt(user.access_token);
+            dispatch({
+                type: USER_FOUND,
+                accessToken: user.access_token,
+                idToken: user.id_token,
+                userId: tokenData.sub,
+                profile: user.profile
+            });
+            console.info("Uživatel byl pøihlášen");
+        });
+        userManager.events.addUserUnloaded(() => {
+            dispatch({ type: USER_EXPIRED });
+            console.info("Informace o pøihlášení jsou neplatné.");
+        });
+        userManager.events.addAccessTokenExpiring(() => {
+            dispatch({ type: USER_EXPIRING });
+            console.info("Platnost pøihlášení brzy vyprší.");
+        });
+        userManager.events.addAccessTokenExpired(() => {
+            dispatch({ type: USER_EXPIRED });
+            console.info("Platnost pøihlášení vypršela.");
+        });
+        userManager.events.addSilentRenewError(() => {
+            dispatch({ type: SILENT_RENEW_ERROR });
+            console.info("Nepodaøilo se obnovit pøihlášení.");
+        });
+        userManager.events.addUserSignedOut(() => {
+            dispatch({ type: USER_EXPIRED });
+            console.info("Uživatel byl odhlášen.");
+        });
+        userManager.getUser()
+            .then((user) => {
+                if (user && !user.expired) {
+                    let tokenData = parseJwt(user.access_token);
+                    dispatch({
+                        type: USER_FOUND,
+                        accessToken: user.access_token,
+                        idToken: user.id_token,
+                        userId: tokenData.sub,
+                        profile: user.profile
+                    });
+                } else if (!user || (user && user.expired)) {
+                    dispatch({
+                        type: USER_EXPIRED
+                    });
+                }
+            })
+            .catch(() => {
+                dispatch({
+                    type: LOAD_USER_ERROR
+                });
+            });
+    }, [dispatch]);
     return (
         <AuthContext.Provider value={store}>
             {props.children}
