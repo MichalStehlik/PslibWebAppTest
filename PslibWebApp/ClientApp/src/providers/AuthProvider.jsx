@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
-import { UserManager, WebStorageStateStore, Log } from "oidc-client";
+import { UserManager, WebStorageStateStore, Log as OidcLogger } from "oidc-client-ts";
 import { useAppContext, ADD_MESSAGE } from "./ApplicationProvider";
 
 export const SET_USER_MANAGER = "SET_USER_MANAGER";
@@ -19,15 +19,6 @@ export const SET_THEME = "SET_THEME";
 export const SET_ICON = "SET_ICON";
 
 const userStore = window.localStorage;
-/*
-const userManager = new UserManager({
-    ...IDENTITY_CONFIGURATION,
-    userStore: new WebStorageStateStore({ store: userStore }),
-    metadata: {
-        ...METADATA_OIDC
-    }
-});
-*/
 
 const parseJwt = token => {
     const base64Url = token.split(".")[1];
@@ -91,8 +82,8 @@ export const AuthProvider = props => {
                 userStore: new WebStorageStateStore({ store: userStore }),
             }
             let userManager = new UserManager(extendedConfig);
-            Log.logger = console;
-            Log.level = /*Log.ERROR;*/ Log.DEBUG;
+            OidcLogger.setLogger(console);
+            OidcLogger.setLevel(OidcLogger.DEBUG);
             userManager.events.addUserLoaded(user => {
                 const tokenData = parseJwt(user.access_token);
                 dispatch({
@@ -102,28 +93,28 @@ export const AuthProvider = props => {
                     userId: tokenData.sub,
                     profile: user.profile
                 });
-                console.info("Uživatel byl pøihlášen");
+                console.info("UÅ¾ivatel byl pÅ™ihlÃ¡Å¡en");
             });
             userManager.events.addUserUnloaded(() => {
                 dispatch({ type: USER_EXPIRED });
-                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Informace o pøihlášení jsou neplatné.", dismissible: true, expiration: 3 });
-                console.info("Informace o pøihlášení jsou neplatné.");
+                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Informace o pÅ™ihlÃ¡Å¡enÃ­ jsou neplatnÃ©.", dismissible: true, expiration: 3 });
+                console.info("Informace o pÅ™ihlÃ¡Å¡enÃ­ jsou neplatnÃ©.");
             });
             userManager.events.addAccessTokenExpiring(() => {
                 dispatch({ type: USER_EXPIRING });
-                console.info("Platnost pøihlášení brzy vyprší.");
+                console.info("Platnost pÅ™ihlÃ¡Å¡enÃ­ brzy vyprÅ¡Ã­.");
             });
             userManager.events.addAccessTokenExpired(() => {
                 dispatch({ type: USER_EXPIRED });
-                console.info("Platnost pøihlášení vypršela.");
+                console.info("Platnost pÅ™ihlÃ¡Å¡enÃ­ vyprÅ¡ela.");
             });
             userManager.events.addSilentRenewError(() => {
                 dispatch({ type: SILENT_RENEW_ERROR });
-                console.info("Nepodaøilo se obnovit pøihlášení.");
+                console.info("NepodaÅ™ilo se obnovit pÅ™ihlÃ¡Å¡enÃ­.");
             });
             userManager.events.addUserSignedOut(() => {
                 dispatch({ type: USER_EXPIRED });
-                console.info("Uživatel byl odhlášen.");
+                console.info("UÅ¾ivatel byl odhlÃ¡Å¡en.");
             });
             userManager.getUser()
                 .then((user) => {

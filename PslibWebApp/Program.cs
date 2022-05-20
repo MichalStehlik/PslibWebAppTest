@@ -28,10 +28,10 @@ builder.Services.AddAuthorization(options => { });
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options => {
     options.Authority = builder.Configuration["Authority:Server"];
     options.RequireHttpsMetadata = true;
-    options.Audience = "TestApi";
+    options.Audience = builder.Configuration["Authority:Audience"];
 });
 builder.Services.Configure<ClientConfigurationOptions>(
-    builder.Configuration.GetSection("Client")
+    builder.Configuration.GetSection("OidcClient")
 );
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

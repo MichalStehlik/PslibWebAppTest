@@ -73,7 +73,6 @@ export const ApplicationProvider = props => {
         axios.get("/api/configuration")
             .then(response => {
                 dispatch({ type: SET_APPLICATION_CONFIGURATION, payload: response.data });
-                console.log(response.data);
             })
         dispatch({ type: SET_APPLICATION_BUSY, payload: false });
     }, [dispatch]);
