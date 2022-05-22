@@ -10,11 +10,15 @@ export const SET_APPLICATION_BUSY = "SET_APPLICATION_BUSY";
 export const SET_APPLICATION_BUSY_MESSAGE = "SET_APPLICATION_BUSY_MESSAGE";
 export const SET_APPLICATION_CONFIGURATION = "SET_APPLICATION_CONFIGURATION";
 
+export const THEME_LIGHT = "light";
+export const THEME_DARK = "dark";
+export const THEME_AUTO = null;
+
 const initialState = {
     title: null,
     messages: [],
     messageCounter: 0,
-    theme: "light",
+    theme: THEME_LIGHT,
     applicationBusy: false,
     applicationBusyMessage: "",
     config: null
@@ -24,7 +28,7 @@ const reducer = (state, action) => {
     var newMessages = [...state.messages];
     switch (action.type) {
         case SET_THEME: {
-            return { ...state, theme: action.theme };
+            return { ...state, theme: action.payload };
         }
         case ADD_MESSAGE: {
             newMessages.push({

@@ -18,7 +18,14 @@ namespace PslibWebApp.Controllers
         }
 
         [HttpGet()]
-        public ActionResult GetClient()
+        public ActionResult Get()
+        {
+            _logger.LogInformation("Application configuration read");
+            return Ok(new { });
+        }
+
+        [HttpGet("oidc")]
+        public ActionResult GetOidc()
         {
             _logger.LogInformation("Client configuration read");
             return Ok(_options);
