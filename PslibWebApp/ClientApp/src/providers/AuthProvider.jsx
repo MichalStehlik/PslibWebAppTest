@@ -19,6 +19,7 @@ export const LOAD_USER_ERROR = "LOAD_USER_ERROR";
 export const USER_SIGNED_OUT = "USER_SIGNED_OUT";
 export const SET_THEME = "SET_THEME";
 export const SET_ICON = "SET_ICON";
+export const RETURN_URL = "RETURN_URL";
 
 const userStore = window.localStorage;
 
@@ -56,6 +57,8 @@ const reducer = (state, action) => {
         }
         case SET_USER_MANAGER:
             return { ...state, userManager: action.payload }
+        case RETURN_URL:
+            return { ...state, returnUrl: action.payload }
         default: {
             return state;
         }
@@ -69,6 +72,7 @@ const initialState = {
     userId: null,
     profile: null,
     isUserLoading: false,
+    returnUrl: null
 }
 
 export const AuthContext = createContext(initialState);

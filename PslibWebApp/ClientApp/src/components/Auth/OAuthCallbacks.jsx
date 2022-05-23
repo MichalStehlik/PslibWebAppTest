@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuthContext } from "../../providers/AuthProvider"
+import { useAuthContext, SET_ICON } from "../../providers/AuthProvider"
 import axios from "axios"
 
 export const SignInCallback = props => {
-    const [{ userManager }] = useAuthContext();
+    const [{ userManager, returnUrl }, dispatch] = useAuthContext();
     const [message, setMessage] = useState("");
     const [signResult, setSignResult] = useState(null);
     let navigate = useNavigate();
@@ -21,29 +21,54 @@ export const SignInCallback = props => {
     useEffect(() => {
         if (signResult !== null) {
             setMessage("Ověřování existence uživatele " + signResult.profile.sub);
-            axios.get( "/api/users/guid/" + signResult.profile.sub, {
+            axios.get( "/api/users/" + signResult.profile.sub, {
                 headers: {
-                    Authorization: "Bearer " + signResult.accessToken,
+                    Authorization: "Bearer " + signResult.access_token,
                     "Content-Type": "application/json"
                 }
             })
                 .then(result => {
                     setMessage("Vítejte zpět");
+                    axios.put("/api/users/" + signResult.profile.sub, {
+                        Id: signResult.profile.sub,
+                        FirstName: signResult.profile.given_name,
+                        MiddleName: signResult.profile.middle_name,
+                        LastName: signResult.profile.family_name,
+                        Gender: (signResult.profile.gender === "Male") ? 1 : (signResult.profile.gender === "Female") ? 2 : (signResult.profile.gender === "Other") ? 3 : 0,
+                        Email: signResult.profile.email,
+                        Phone: signResult.profile.phone
+                    }, {
+                        headers: {
+                            Authorization: "Bearer " + signResult.access_token,
+                            "Content-Type": "application/json"
+                        }
+                    })
+                        .then(response => {
+                            setMessage("Profil byl aktualizován");
+                        })
+                        .catch(error => {
+                            setMessage("Došlo k chybě při aktualizaci profilu.");
+                        })
+                        .then(() => {
 
+                        })
                 })
                 .catch(error => {
                     if (error.response && error.response.status === 404) {
                         setMessage("Založení nového uživatele");
-                        const d = new Date();
                         axios.post("/api/users", {
+                            Id: signResult.profile.sub,
                             FirstName: signResult.profile.given_name,
                             MiddleName: signResult.profile.middle_name,
                             LastName: signResult.profile.family_name,
                             Gender: (signResult.profile.gender === "Male") ? 1 : (signResult.profile.gender === "Female") ? 2 : (signResult.profile.gender === "Other") ? 3 : 0,
                             Email: signResult.profile.email,
-                            IdentityId: signResult.profile.sub,
-                            Phone: signResult.profile.phone,
-                            //AuthorizedDate: d.toISOString()
+                            Phone: signResult.profile.phone
+                        }, {
+                            headers: {
+                                Authorization: "Bearer " + signResult.access_token,
+                                "Content-Type": "application/json"
+                            }
                         })
                             .then(response => {
                                 setMessage("Profil vytvořen");
@@ -60,22 +85,63 @@ export const SignInCallback = props => {
                     }
                 })
                 .then(() => {
-                    navigate("/");
+                    setMessage("Získávání uživatelské ikony");
+                    let authorityUrl = userManager.settings.authority;
+                    axios.get(authorityUrl + "/api/account/icon", {
+                        responseType: "blob",
+                        headers: {
+                            Authorization: "Bearer " + signResult.access_token,
+                        }
+                    })
+                        .then(response => {
+                            let imageData = new Blob([response.data], { type: response.headers["content-type"] });
+                            let reader = new FileReader();
+                            reader.onloadend = function () {
+                                var base64 = reader.result;
+                                var base64data = base64.split(',')[1]
+                                dispatch({ type: SET_ICON, icon: base64data, iconType: response.headers["content-type"] });
+                            }
+                            reader.readAsDataURL(imageData);
+                            let formData = new FormData();
+                            formData.append("file", imageData, "picture.jpg");
+                            axios.post("/api/users/" + signResult.profile.sub + "/icon",
+                                formData,
+                                {
+                                    headers: {
+                                        Authorization: "Bearer " + signResult.access_token,
+                                        "Content-Type": 'multipart/form-data'
+                                    }
+                                })
+                                .then(response => {
+                                })
+                                .catch(error => {
+                                    setMessage("Při ukládání ikony došlo k chybě.");
+                                })
+                                .then(() => {
+                                    
+                                })
+                        })
+                        .catch(error => {
+                            setMessage("Při získávání ikony došlo k chybě.");
+                        })
+                        .then(() => {
+                            navigate(returnUrl !== null ? returnUrl : "/");
+                        })
                 })      
         }   
-    }, [signResult, navigate]);
+    }, [signResult, navigate, userManager, dispatch]);
     return (
         <p>{message}</p>
         );
 }
 
 export const SignOutCallback = props => {
-    const [{ userManager }] = useAuthContext();
+    const [{ userManager, returnUrl }, dispatch] = useAuthContext();
     let navigate = useNavigate();
     useEffect(() => {
         if (userManager !== null) {
             userManager.signoutRedirectCallback();
-            navigate("/");
+            navigate(returnUrl !== null ? returnUrl : "/");
         }
     }, [userManager, navigate]);
     return null;

@@ -4,7 +4,7 @@ using PslibWebApp.Models;
 
 namespace PslibWebApp.Services
 {
-    public class UserRepository : RepositoryBase<int, User>, IRepository<int, User>
+    public class UserRepository : RepositoryBase<Guid, User>, IRepository<Guid, User>
     {
         public UserRepository(ApplicationDbContext context): base(context) {}
 
@@ -12,11 +12,6 @@ namespace PslibWebApp.Services
         {
             base.Update(entity);
             entity.UpdatedDate = DateTime.Now;
-        }
-
-        public virtual Task<User?> GetAsync(Guid id)
-        {
-            return DbSet.Where(u => u.IdentityId == id).SingleOrDefaultAsync();
         }
     }
 }

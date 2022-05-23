@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PslibWebApp.Controllers;
 using PslibWebApp.Data;
+using PslibWebApp.Definitions;
 using PslibWebApp.Services;
 using Serilog;
 
@@ -24,7 +25,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 builder.Services.AddOptions();
 builder.Services.AddScoped<UserRepository>();
-builder.Services.AddAuthorization(options => { });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AuthorizationConstants.ADMIN_POLICY, policy =>
+    {
+        policy.RequireClaim(AuthorizationConstants.ADMIN_CLAIM, "1");
+    });
+});
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options => {
     options.Authority = builder.Configuration["Authority:Server"];
     options.RequireHttpsMetadata = true;
@@ -32,6 +39,9 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options => {
 });
 builder.Services.Configure<ClientConfigurationOptions>(
     builder.Configuration.GetSection("OidcClient")
+);
+builder.Services.Configure<UsersConfigurationOptions>(
+    builder.Configuration.GetSection("Users")
 );
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -54,6 +64,9 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

@@ -12,7 +12,7 @@ using PslibWebApp.Data;
 namespace PslibWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220523180557_Initial")]
+    [Migration("20220523212946_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,14 +26,9 @@ namespace PslibWebApp.Migrations
 
             modelBuilder.Entity("PslibWebApp.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime?>("AuthorizedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
@@ -57,9 +52,6 @@ namespace PslibWebApp.Migrations
                     b.Property<string>("IconImageType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("IdentityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -80,10 +72,6 @@ namespace PslibWebApp.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
-
-                    b.HasIndex("IdentityId")
-                        .IsUnique()
-                        .HasFilter("[IdentityId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
