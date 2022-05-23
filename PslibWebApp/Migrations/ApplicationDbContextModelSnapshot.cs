@@ -30,7 +30,7 @@ namespace PslibWebApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("AuthorizedDate")
+                    b.Property<DateTime?>("AuthorizedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedDate")
@@ -61,12 +61,6 @@ namespace PslibWebApp.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockedChange")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockedIcon")
-                        .HasColumnType("bit");
 
                     b.Property<string>("MiddleName")
                         .IsRequired()

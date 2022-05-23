@@ -1,18 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import { ErrorBoundary } from "./boundaries/ErrorBoundary";
-import { ApplicationProvider } from "./providers/ApplicationProvider";
-import { AuthProvider } from "./providers/AuthProvider";
+import { ErrorBoundary } from 'react-error-boundary'
+import { ApplicationProvider } from "./providers/ApplicationProvider"
+import { AuthProvider } from "./providers/AuthProvider"
+import { ErrorFallback } from "./pages/ErrorFallback";
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');
 
 ReactDOM.render(
-    <ErrorBoundary>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
         <ApplicationProvider>
             <AuthProvider>
                 <BrowserRouter basename={baseUrl}>

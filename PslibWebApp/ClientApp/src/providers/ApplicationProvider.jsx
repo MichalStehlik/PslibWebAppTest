@@ -1,12 +1,13 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
 import axios from "axios";
+import { useThemeDetector } from "../ui-components";
 
 export const SET_TITLE = "SET_TITLE";
 export const ADD_MESSAGE = "ADD_MESSAGE";
 export const DISMISS_MESSAGE = "DISMISS_MESSAGE";
 export const CLEAR_MESSAGES = "CLEAR_MESSAGES";
 export const SET_THEME = "SET_THEME";
-export const SET_STORED_THEME = "SET_STORED_THEME";
+export const SET_DEFAULT_THEME = "SET_DEFAULT_THEME";
 export const SET_APPLICATION_BUSY = "SET_APPLICATION_BUSY";
 export const SET_APPLICATION_BUSY_MESSAGE = "SET_APPLICATION_BUSY_MESSAGE";
 export const SET_APPLICATION_CONFIGURATION = "SET_APPLICATION_CONFIGURATION";
@@ -17,16 +18,8 @@ export const THEME_LIGHT = "light";
 export const THEME_DARK = "dark";
 export const THEME_AUTO = "auto";
 
-const initialState = {
-    title: null,
-    messages: [],
-    messageCounter: 0,
-    theme: null,
-    storedTheme: null,
-    applicationBusy: false,
-    applicationBusyMessage: "",
-    config: null
-}
+const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
+const getStoredTheme = () => localStorage.getItem(THEME_STORAGE_ID);
 
 const reducer = (state, action) => {
     var newMessages = [...state.messages];
@@ -34,8 +27,8 @@ const reducer = (state, action) => {
         case SET_THEME: {
             return { ...state, theme: action.payload };
         }
-        case SET_STORED_THEME: {
-            return { ...state, storedTheme: action.payload };
+        case SET_DEFAULT_THEME: {
+            return { ...state, defaultTheme: action.payload };
         }
         case ADD_MESSAGE: {
             newMessages.push({
@@ -71,20 +64,28 @@ const reducer = (state, action) => {
     }
 }
 
+const initialState = {
+    title: null,
+    messages: [],
+    messageCounter: 0,
+    theme: (getCurrentTheme() ? THEME_DARK : THEME_LIGHT),
+    defaultTheme: getStoredTheme() || THEME_AUTO,
+    applicationBusy: false,
+    applicationBusyMessage: "",
+    config: {}
+}
+
 export const ApplicationContext = createContext(initialState);
 export const ApplicationConsumer = ApplicationContext.Consumer;
+
 export const ApplicationProvider = props => {
-    useEffect(() => {
-        const savedTheme = localStorage.getItem(THEME_STORAGE_ID);
-        const initialTheme = JSON.parse(savedTheme) || THEME_AUTO;
-        initialState.storedTheme = initialTheme;
-        initialState.theme = initialTheme;
-    }, []);
+    let darkMode = useThemeDetector();
+
     const store = useReducer(
         reducer,
         initialState
     );
-    const [, dispatch] = store;
+    const [state, dispatch] = store;
     useEffect(() => {
         dispatch({ type: SET_APPLICATION_BUSY, payload: true });
         axios.get("/api/configuration")
@@ -93,6 +94,17 @@ export const ApplicationProvider = props => {
             })
         dispatch({ type: SET_APPLICATION_BUSY, payload: false });
     }, [dispatch]);
+    useEffect(() => {
+        if (state.defaultTheme === THEME_AUTO) {
+            dispatch({ type: SET_THEME, payload: (darkMode ? THEME_DARK : THEME_LIGHT) });
+        }
+        else {
+            dispatch({ type: SET_THEME, payload: state.defaultTheme });
+        }
+    }, [darkMode, dispatch, state.defaultTheme]);
+    useEffect(() => {
+        localStorage.setItem(THEME_STORAGE_ID, state.defaultTheme);
+    }, [state.defaultTheme]);
     return (
         <ApplicationContext.Provider value={store}>
             {props.children}

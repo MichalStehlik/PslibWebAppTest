@@ -24,9 +24,7 @@ namespace PslibWebApp.Migrations
                     IdentityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IconImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     IconImageType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LockedChange = table.Column<bool>(type: "bit", nullable: false),
-                    LockedIcon = table.Column<bool>(type: "bit", nullable: false),
-                    AuthorizedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AuthorizedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },

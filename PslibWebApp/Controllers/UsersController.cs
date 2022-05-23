@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PslibWebApp.InputModels;
 using PslibWebApp.Models;
 using PslibWebApp.Services;
 
@@ -45,6 +46,20 @@ namespace PslibWebApp.Controllers
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
+        {
+            var user = await _repo.GetAsync(id);
+
+            if (user == null)
+            {
+                _logger.LogError("User " + id + " does not exists. ");
+                return NotFound("User " + id + " does not exists. ");
+            }
+
+            return user;
+        }
+
+        [HttpGet("guid/{id}")]
+        public async Task<ActionResult<User>> GetUserByGuid(Guid id)
         {
             var user = await _repo.GetAsync(id);
 

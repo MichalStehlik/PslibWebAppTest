@@ -13,5 +13,10 @@ namespace PslibWebApp.Services
             base.Update(entity);
             entity.UpdatedDate = DateTime.Now;
         }
+
+        public virtual Task<User?> GetAsync(Guid id)
+        {
+            return DbSet.Where(u => u.IdentityId == id).SingleOrDefaultAsync();
+        }
     }
 }

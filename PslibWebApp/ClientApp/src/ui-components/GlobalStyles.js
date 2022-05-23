@@ -20,7 +20,7 @@ export const GlobalStyles = createGlobalStyle`
         color: ${({ theme }) => theme.text};
         font-family: 'Open Sans', sans-serif;
         font-size: 14px;
-        transition: all 0.50s linear;
+        transition: color 0.3s linear, background-color 0.3s linear;
     }
     img {
         border: none;

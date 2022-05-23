@@ -21,9 +21,7 @@ namespace PslibWebApp.Models
         public Guid? IdentityId { get; set; }
         public byte[]? IconImage { get; set; }
         public string? IconImageType { get; set; }
-        public bool LockedChange { get; set; } = false;
-        public bool LockedIcon { get; set; } = false;
-        public DateTime AuthorizedDate { get; set; }
+        public DateTime? AuthorizedDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         [NotMapped]

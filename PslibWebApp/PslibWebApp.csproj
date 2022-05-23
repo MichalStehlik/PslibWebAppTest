@@ -40,7 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="InputModels\" />
     <Folder Include="Logs\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
