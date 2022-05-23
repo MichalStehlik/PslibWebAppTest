@@ -1,8 +1,7 @@
-import { ThemeProvider as StyledComponentsThemeProvider } from "styled-components";
-import { lightTheme, darkTheme } from "./Themes"
+import { ThemeProvider as StyledComponentsThemeProvider } from "styled-components"
 
-export const ThemeProvider = ({ children, theme }) => (
-    <StyledComponentsThemeProvider theme={theme}>
+export const ThemeProvider = ({ children, ...props }) => (
+    <StyledComponentsThemeProvider {...props} >
         { children }
     </StyledComponentsThemeProvider>
 );

@@ -6,17 +6,12 @@ import Profile from "./pages/Profile"
 import NotFound from "./pages/NotFound"
 import { SignInCallback, SignOutCallback, SilentRenewCallback } from "./components/Auth/OAuthCallbacks"
 import Navigation from "./components/Navigation"
-import { useAppContext } from "./providers/ApplicationProvider"
 
-import { ThemeProvider } from "./ui-components/ThemeProvider";
-import { GlobalStyles } from "./ui-components/GlobalStyles";
-import { lightTheme, darkTheme } from "./ui-components/Themes"
+import { ApplicationThemeProvider } from "./providers/ApplicationThemeProvider";
 
 export const App = () => {
-    const [{ theme }] = useAppContext();
     return (
-        <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
-            <GlobalStyles />
+        <ApplicationThemeProvider>
             <Navigation />
             <Routes>
                 <Route path="/oidc-callback" element={<SignInCallback />} />
@@ -27,7 +22,7 @@ export const App = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
-        </ThemeProvider>
+        </ApplicationThemeProvider>
         );
 }
 

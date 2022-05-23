@@ -6,19 +6,23 @@ export const ADD_MESSAGE = "ADD_MESSAGE";
 export const DISMISS_MESSAGE = "DISMISS_MESSAGE";
 export const CLEAR_MESSAGES = "CLEAR_MESSAGES";
 export const SET_THEME = "SET_THEME";
+export const SET_STORED_THEME = "SET_STORED_THEME";
 export const SET_APPLICATION_BUSY = "SET_APPLICATION_BUSY";
 export const SET_APPLICATION_BUSY_MESSAGE = "SET_APPLICATION_BUSY_MESSAGE";
 export const SET_APPLICATION_CONFIGURATION = "SET_APPLICATION_CONFIGURATION";
 
+const THEME_STORAGE_ID = "APP_THEME";
+
 export const THEME_LIGHT = "light";
 export const THEME_DARK = "dark";
-export const THEME_AUTO = null;
+export const THEME_AUTO = "auto";
 
 const initialState = {
     title: null,
     messages: [],
     messageCounter: 0,
-    theme: THEME_LIGHT,
+    theme: null,
+    storedTheme: null,
     applicationBusy: false,
     applicationBusyMessage: "",
     config: null
@@ -29,6 +33,9 @@ const reducer = (state, action) => {
     switch (action.type) {
         case SET_THEME: {
             return { ...state, theme: action.payload };
+        }
+        case SET_STORED_THEME: {
+            return { ...state, storedTheme: action.payload };
         }
         case ADD_MESSAGE: {
             newMessages.push({
@@ -67,6 +74,12 @@ const reducer = (state, action) => {
 export const ApplicationContext = createContext(initialState);
 export const ApplicationConsumer = ApplicationContext.Consumer;
 export const ApplicationProvider = props => {
+    useEffect(() => {
+        const savedTheme = localStorage.getItem(THEME_STORAGE_ID);
+        const initialTheme = JSON.parse(savedTheme) || THEME_AUTO;
+        initialState.storedTheme = initialTheme;
+        initialState.theme = initialTheme;
+    }, []);
     const store = useReducer(
         reducer,
         initialState
