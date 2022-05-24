@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuthContext, SET_ICON } from "../../providers/AuthProvider"
+import { Flex } from "../../ui-components"
 import axios from "axios"
 
 export const SignInCallback = props => {
@@ -131,7 +132,10 @@ export const SignInCallback = props => {
         }   
     }, [signResult, navigate, userManager, dispatch, returnUrl]);
     return (
-        <p>{message}</p>
+        <Flex>
+            <h1>Přihlašování uživatele</h1>
+            <p>{ message }</p>
+        </Flex>
         );
 }
 

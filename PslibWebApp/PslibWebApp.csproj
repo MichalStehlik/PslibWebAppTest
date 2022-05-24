@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\components\Auth\" />
     <Folder Include="InputModels\" />
     <Folder Include="Logs\" />
     <Folder Include="Migrations\" />

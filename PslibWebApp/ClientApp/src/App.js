@@ -1,25 +1,31 @@
 import React from "react"
 import { Routes, Route} from "react-router-dom"
-import Home from "./pages/Home"
-import Test from "./pages/Test"
-import Profile from "./pages/Profile"
+import { MainLayout } from "./pages/Main"
+import Test from "./pages/Main/Test"
+import Profile from "./pages/Main/Profile"
+import Title from "./pages/Main/Title"
 import NotFound from "./pages/NotFound"
-import { SignInCallback, SignOutCallback, SilentRenewCallback } from "./components/Auth/OAuthCallbacks"
-import Navigation from "./components/Navigation"
+import { Auth } from "./pages/Auth"
+import { SignInCallback, SignOutCallback, SilentRenewCallback } from "./pages/Auth/OAuthCallbacks"
+import { Loading } from "./pages/Auth/Loading"
 
 import { ApplicationThemeProvider } from "./providers/ApplicationThemeProvider";
 
 export const App = () => {
     return (
         <ApplicationThemeProvider>
-            <Navigation />
             <Routes>
-                <Route path="/oidc-callback" element={<SignInCallback />} />
-                <Route path="/oidc-signout-callback" element={<SignOutCallback />} />
-                <Route path="/oidc-silent-callback" element={<SilentRenewCallback />} />
-                <Route index path='/' element={<Home />} />
-                <Route path="/test" element={<Test />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/oidc" element={<Auth />} >
+                    <Route path="callback" element={<SignInCallback />} />
+                    <Route path="signout-callback" element={<SignOutCallback />} />
+                    <Route path="silent-callback" element={<SilentRenewCallback />} />
+                    <Route path="loading" element={<Loading />} />
+                </Route>
+                <Route path='/' element={<MainLayout />}>
+                    <Route index path='/' element={<Title />} />
+                    <Route path="/test" element={<Test />} />
+                    <Route path="/profile" element={<Profile />} />
+                </Route>
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </ApplicationThemeProvider>

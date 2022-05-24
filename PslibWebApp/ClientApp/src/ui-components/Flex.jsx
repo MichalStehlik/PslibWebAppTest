@@ -1,7 +1,6 @@
 import styled from "styled-components"
-import Tag from "./Tag"
 
-const StyledFlex = styled(Tag)`
+const StyledFlex = styled.div`
     display: ${props => props.inline ? "inline-flex" : "flex"};
     flex-direction: ${props => props.direction};
     flex-wrap: ${props => props.wrap};
@@ -11,7 +10,7 @@ const StyledFlex = styled(Tag)`
     gap: ${props => props.gap};
 `;
 
-export const Flex = (props) => (<StyledFlex {...props} />)
+export const Flex = () => (<StyledFlex />)
 
 Flex.defaultProps = {
     as: "div",
