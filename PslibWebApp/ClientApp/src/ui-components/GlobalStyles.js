@@ -33,12 +33,12 @@ export const GlobalStyles = createGlobalStyle`
         line-height: 1.6;
     }
     a {
-        color: #357BC2;
+        color: ${({ theme }) => theme.link};
         text-decoration: underline;
     }
     a:hover {
         text-decoration: none;
-        color: #333;
+        color: ${({ theme }) => theme.hoverLink};
     }
     h1, h2, h3, h4, h5 {
         padding: 0px;

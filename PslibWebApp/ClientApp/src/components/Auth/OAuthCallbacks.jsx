@@ -129,21 +129,21 @@ export const SignInCallback = props => {
                         })
                 })      
         }   
-    }, [signResult, navigate, userManager, dispatch]);
+    }, [signResult, navigate, userManager, dispatch, returnUrl]);
     return (
         <p>{message}</p>
         );
 }
 
 export const SignOutCallback = props => {
-    const [{ userManager, returnUrl }, dispatch] = useAuthContext();
+    const [{ userManager, returnUrl }] = useAuthContext();
     let navigate = useNavigate();
     useEffect(() => {
         if (userManager !== null) {
             userManager.signoutRedirectCallback();
             navigate(returnUrl !== null ? returnUrl : "/");
         }
-    }, [userManager, navigate]);
+    }, [userManager, navigate, returnUrl]);
     return null;
 }
 

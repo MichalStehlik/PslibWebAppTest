@@ -1,6 +1,6 @@
 export const Colors = {
-    body: '#E9E9E9',
-    text: '#2B2B2B',
+    primary: '#357BC2',
+    primaryHover: '#295989'
 }
 
 export default Colors;
