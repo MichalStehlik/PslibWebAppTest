@@ -15,11 +15,7 @@ export const Navigation = () => {
                     <MenuItem><Link to="/users">Users</Link></MenuItem>
                     <MenuItem><Link to="/profile">Profile</Link></MenuItem>
                     <MenuItem><Link to="/something">Something</Link></MenuItem>
-                    <MenuItem><Link to="/oidc/loading">Loader</Link></MenuItem>
                     <MenuItem><a href="/swagger">Swagger</a></MenuItem>
-                </MenuBlock>
-                <MenuBlock>
-                    <MenuItem>Log In</MenuItem>
                 </MenuBlock>
             </Menu>
             <div>

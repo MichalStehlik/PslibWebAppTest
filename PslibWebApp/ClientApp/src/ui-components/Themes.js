@@ -1,14 +1,16 @@
+import { Colors } from "./Colors"
+
 export const lightTheme = {
-    body: '#FFFFFF',
+    body: Colors.white,
     panel: '#E9E9E9',
-    text: '#2B2B2B',
+    text: Colors.darkGray,
     link: '#0072bc',
     hoverLink: '#357BC2'
 }
 export const darkTheme = {
-    body: '#2B2B2B',
+    body: Colors.darkGray,
     panel: '#393939',
-    text: '#E9E9E9',
+    text: Colors.white,
     link: '#0072bc',
     hoverLink: '#EEEEEE'
 }

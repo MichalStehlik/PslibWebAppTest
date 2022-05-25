@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuthContext, SET_ICON } from "../../providers/AuthProvider"
-import { Flex } from "../../ui-components"
+import { Flex, Spinner } from "../../ui-components"
 import axios from "axios"
 
 export const SignInCallback = props => {
@@ -132,8 +132,9 @@ export const SignInCallback = props => {
         }   
     }, [signResult, navigate, userManager, dispatch, returnUrl]);
     return (
-        <Flex>
-            <h1>Přihlašování uživatele</h1>
+        <Flex direction="column" alignItems="center">
+            <p>Přihlašování uživatele</p>
+            <Spinner size="5" />
             <p>{ message }</p>
         </Flex>
         );

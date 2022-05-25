@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import Tag from "./Tag"
+import { Colors } from ".";
 
-const StyledButton = styled(Tag)`
+const StyledButton = styled.button`
     margin: 1px;
-    background-color: #0072bc;
+    background-color: ${() => Colors.defaultBlue};
     padding: 1em;
     color: white;
     text-decoration: none;
@@ -16,14 +16,14 @@ const StyledButton = styled(Tag)`
     cursor: pointer;
     font-weight: bold;
     &:hover {
-        background-color: #357BC2;
+        background-color: ${() => Colors.lightBlue};
     }
 `;
 
-export const Button = (props) => (<StyledButton {...props} />)
+export const Button = ({ variant, ...props }) => (<StyledButton {...props} />)
 
 Button.defaultProps = {
-    as: "button"
+    variant: "default"
 }
 
 export default Button;

@@ -19,7 +19,7 @@ export const GlobalStyles = createGlobalStyle`
         background: ${({ theme }) => theme.body};
         color: ${({ theme }) => theme.text};
         font-family: 'Open Sans', sans-serif;
-        font-size: 14px;
+        font-size: 12px;
         transition: color 0.3s linear, background-color 0.3s linear;
     }
     img {
