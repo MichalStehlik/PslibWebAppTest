@@ -22,7 +22,7 @@ export const NotificationContainer = ({ variant, children, ...rest }) => {
     return ReactDOM.createPortal(
         <StyledNotificationContainer {...rest} >
             {messages.slice(-5).map((item, index) => (
-                <Notification key={index} text={item.text} variant={item.variant} />
+                <Notification key={index} variant={item.variant}>{ item.text }</Notification>
             ))}
         </StyledNotificationContainer>,
         document.querySelector("#notifications")
@@ -34,6 +34,6 @@ const StyledNotification = styled(Alert)`
     max-height: 200px;
 `;
 
-const Notification = ({ variant, text, ...rest }) => (<StyledNotification {...rest} >{text}</StyledNotification>)
+const Notification = (props) => (<StyledNotification {...props} />)
 
 export default NotificationContainer;

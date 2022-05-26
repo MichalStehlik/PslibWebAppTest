@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import { Flex, Colors } from ".";
+import { Flex } from ".";
 
 const StyledMenu = styled(Flex)`
     margin: 1px;
-    background-color: ${() => Colors.darkBlue};
+    background-color: ${props => props.theme.primary};
     border-radius: 4px;
     overflow: auto;
 `;
@@ -36,7 +36,7 @@ const StyledMenuItem = styled.li`
     & > a:hover {
         text-decoration: none;
         color: white;
-        background-color: ${() => Colors.defaultBlue};
+        background-color: ${props => props.theme.primary};
     }
 `;
 

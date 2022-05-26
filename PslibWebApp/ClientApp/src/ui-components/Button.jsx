@@ -1,11 +1,11 @@
 import styled from "styled-components"
-import { Colors } from ".";
+import { getBackground, getColor } from ".";
 
 const StyledButton = styled.button`
     margin: 1px;
-    background-color: ${() => Colors.defaultBlue};
-    padding: 1em;
-    color: white;
+    background-color: ${props => getBackground(props.theme, props.variant)};
+    padding: .8em 2em;
+    color: ${props => getColor(props.theme, props.variant)};
     text-decoration: none;
     text-transform: uppercase;
     font-size: 12px;
@@ -16,11 +16,12 @@ const StyledButton = styled.button`
     cursor: pointer;
     font-weight: bold;
     &:hover {
-        background-color: ${() => Colors.lightBlue};
+        background-color: ${props => props.theme.hoverDefault};
+        color: ${props => props.theme.hoverDefaultText};
     }
 `;
 
-export const Button = ({ variant, ...props }) => (<StyledButton {...props} />)
+export const Button = (props) => (<StyledButton {...props} />)
 
 Button.defaultProps = {
     variant: "default"
