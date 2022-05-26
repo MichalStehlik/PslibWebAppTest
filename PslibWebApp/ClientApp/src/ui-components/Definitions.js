@@ -1,3 +1,3 @@
-﻿export const Breakpoints  = {
+export const Breakpoints  = {
     "Phone": "320px"
 }

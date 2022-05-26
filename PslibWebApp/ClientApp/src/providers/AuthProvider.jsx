@@ -118,7 +118,7 @@ export const AuthProvider = props => {
             });
             userManager.events.addAccessTokenExpiring(() => {
                 dispatch({ type: USER_EXPIRING });
-                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Platnost přihlášení brzy vyprší.", dismissible: true, expiration: 3 });
+                appDispatch({ type: ADD_MESSAGE, variant: "warning", text: "Platnost přihlášení brzy vyprší.", dismissible: true, expiration: 3 });
                 console.info("Platnost přihlášení brzy vyprší.");
             });
             userManager.events.addAccessTokenExpired(() => {
@@ -128,7 +128,7 @@ export const AuthProvider = props => {
             });
             userManager.events.addSilentRenewError(() => {
                 dispatch({ type: SILENT_RENEW_ERROR });
-                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Nepodařilo se obnovit přihlášení.", dismissible: true, expiration: 3 });
+                appDispatch({ type: ADD_MESSAGE, variant: "error", text: "Nepodařilo se obnovit přihlášení.", dismissible: true, expiration: 3 });
                 console.info("Nepodařilo se obnovit přihlášení.");
             });
             userManager.events.addUserSignedOut(() => {

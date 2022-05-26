@@ -1,5 +1,6 @@
 import styled from "styled-components"
-import { getBackground, getColor } from ".";
+import { space, layout, color, variant } from 'styled-system'
+import { getBackground, getColor, getHoverBackground, getHoverColor } from ".";
 
 const StyledButton = styled.button`
     margin: 1px;
@@ -15,9 +16,13 @@ const StyledButton = styled.button`
     border: 0;
     cursor: pointer;
     font-weight: bold;
+    display: ${props => props.block ? "flex" : "inline-flex"};
+    ${space}
+    ${layout}
+    ${color}
     &:hover {
-        background-color: ${props => props.theme.hoverDefault};
-        color: ${props => props.theme.hoverDefaultText};
+        background-color: ${props => getHoverBackground(props.theme, props.variant)};
+        color: ${props => getHoverColor(props.theme, props.variant)};
     }
 `;
 

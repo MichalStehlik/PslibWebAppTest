@@ -1,7 +1,8 @@
-import { Variant } from "."
-
 const WHITE = "white";
-const ACCENT1 = "";
+
+const common = {
+    space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
+}
 
 export const lightTheme = {
     body: "white",
@@ -10,50 +11,61 @@ export const lightTheme = {
     link: '#0072bc',
     hoverLink: '#357BC2',
     primary: '#357BC2',
-    primaryText: 'white',
-    hoverPrimary: '#3c7ec1',
+    primaryText: WHITE,
+    hoverPrimary: '#4b87c4',
     hoverPrimaryText: 'white',
-    default: '#666',
+    default: '#ddd',
     defaultText: 'black',
-    hoverDefault: '#AAA',
+    hoverDefault: '#eee',
     hoverDefaultText: 'black',
     error: '#D90000',
-    errorText: 'white',
-    hoverError: '#D90000',
-    hoverErrorText: 'white',
+    errorText: WHITE,
+    hoverError: '#d92929',
+    hoverErrorText: WHITE,
     warning: '#ECB100',
-    info: '#357BC2',
-    infoText: 'white',
-    hoverInfo: '#357BB2',
-    hoverInfoText: 'white',
+    warningText: WHITE,
+    hoverWarning: '#edbb24',
+    hoverWarningText: WHITE,
+    info: '#35b6c2',
+    infoText: WHITE,
+    hoverInfo: '#59b9c2',
+    hoverInfoText: WHITE,
     success: '#00AA80',
-    successText: 'white',
+    successText: WHITE,
     hoverSuccess: '#00BB90',
-    hoverSuccessText: 'white',
+    hoverSuccessText: WHITE,
+    ...common
 }
 export const darkTheme = {
     body: '#2b2b2b',
     panel: '#393939',
-    text: 'white',
+    text: WHITE,
     link: '#0072bc',
     primary: '#357BC2',
-    primaryText: 'white',
-    hoverPrimary: '#3c7ec1',
-    hoverPrimaryText: 'white',
-    default: '#CCC',
-    defaultText: 'black',
-    hoverDefault: '#AAA',
-    hoverDefaultText: 'black',
+    primaryText: WHITE,
+    hoverPrimary: '#4b87c4',
+    hoverPrimaryText: WHITE,
+    default: '#555',
+    defaultText: WHITE,
+    hoverDefault: '#777',
+    hoverDefaultText: WHITE,
     error: '#D90000',
-    errorText: 'white',
-    hoverError: '#D90000',
-    hoverErrorText: 'white',
+    errorText: WHITE,
+    hoverError: '#d92929',
+    hoverErrorText: WHITE,
     warning: '#ECB100',
-    info: '#357BC2',
-    infoText: 'white',
-    hoverInfo: '#357BB2',
-    hoverInfoText: 'white',
+    warningText: WHITE,
+    hoverWarning: '#edbb24',
+    hoverWarningText: WHITE,
+    info: '#35b6c2',
+    infoText: WHITE,
+    hoverInfo: '#59b9c2',
+    hoverInfoText: WHITE,
     success: '#00AA80',
+    successText: WHITE,
+    hoverSuccess: '#00BB90',
+    hoverSuccessText: WHITE,
+    ...common
 }
 
 export const getBackground = (theme, variant) => {
@@ -87,5 +99,39 @@ export const getColor = (theme, variant) => {
             return theme.successText;
         default:
             return theme.defaultText;
+    }
+}
+
+export const getHoverBackground = (theme, variant) => {
+    switch (variant) {
+        case "primary":
+            return theme.hoverPrimary;
+        case "error":
+            return theme.hoverError;
+        case "warning":
+            return theme.hoverWarning;
+        case "info":
+            return theme.hoverInfo;
+        case "success":
+            return theme.hoverSuccess;
+        default:
+            return theme.hoverDefault;
+    }
+}
+
+export const getHoverColor = (theme, variant) => {
+    switch (variant) {
+        case "primary":
+            return theme.hoverPrimaryText;
+        case "error":
+            return theme.hoverErrorText;
+        case "warning":
+            return theme.hoverWarningText;
+        case "info":
+            return theme.hoverInfoText;
+        case "success":
+            return theme.hoverSuccessText;
+        default:
+            return theme.hoverDefaultText;
     }
 }
