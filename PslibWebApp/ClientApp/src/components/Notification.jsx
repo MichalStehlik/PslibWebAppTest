@@ -9,13 +9,13 @@ const StyledNotificationContainer = styled.div`
     bottom: 16px;
     right: 0;
     left: 0;
-    z-index: 100;
+    z-index: 5;
     flex-direction: column;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
     overflow: visible;
-    pointer-events: all
+    pointer-events: none
 `;
 
 export const NotificationContainer = ({ variant, children, ...rest }) => {
@@ -45,6 +45,7 @@ position: absolute;
 right: .5em;
 top: .5em;
 padding: .5em;
+pointer-events: auto;
 `;
 
 const DismissButton = props => {
