@@ -10,7 +10,7 @@ const StyledButton = styled.button`
     text-decoration: none;
     text-transform: uppercase;
     font-size: 12px;
-    font-family: "Open Sans";
+    font-family: 'Open Sans', sans-serif;
     border-radius: 4px;
     text-align: center;
     border: 0;

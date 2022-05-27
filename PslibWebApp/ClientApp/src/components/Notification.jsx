@@ -1,14 +1,24 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { useAppContext, DISMISS_MESSAGE } from "../providers/ApplicationProvider";
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
 import { Alert } from "../ui-components"
+
+const slideIn = keyframes`
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+`;
 
 const StyledNotificationContainer = styled.div`
     position: fixed;
     bottom: 16px;
-    right: 0;
-    left: 0;
+    right: 16px;
+    left: 16px;
     z-index: 5;
     flex-direction: column;
     display: flex;
@@ -59,6 +69,7 @@ const StyledNotification = styled(Alert)`
     max-height: 200px;
     padding-right: 3em;
     position: relative;
+    animation: ${slideIn} .3s linear;
 `;
 
 const Notification = ({ children, dismissible, dismiss, expiration, ...rest }) => (
