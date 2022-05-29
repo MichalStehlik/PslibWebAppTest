@@ -1,137 +1,71 @@
-const WHITE = "white";
-
 const common = {
-    space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
+    space: [0, 4, 8, 12, 16, 32, 64, 128],
+    colors: {
+        grays: {
+            100: '#F6F6F6',
+            200: '#F0F0F0',
+            300: '#E3E3E3',
+            400: '#C0C0C0',
+            500: '#A1A1A1',
+            600: '#787878',
+            700: '#646464',
+            800: '#454545',
+            900: '#232323',
+        },
+        white: '#FFFFFF',
+        black: '#000000',
+        info: {
+            default: '#35b6c2',
+            light: '#59b9c2',
+            dark: '#2a929c'
+        },
+        primary: {
+            default: '#357BC2',
+            light: '#4b87c4',
+            dark: '#305982',
+        },
+        danger: {
+            default: '#D90000',
+            light: '#d92929'
+        },
+        success: {
+            default: '#00AA80',
+            light: '#00BB90',
+        },
+        warning: {
+            default: '#ECB100',
+            light: '#edbb24',
+        },
+        default: {
+            default: '#ddd',
+            light: '#eee',
+        },
+    },
+    radii: {
+        none: 0,
+        default: '4px'
+    }
 }
 
 export const lightTheme = {
-    body: "white",
-    panel: '#E9E9E9',
-    text: '#2b2b2b',
+    ...common,
+    colors: {
+        ...common.colors,
+        body: common.colors.white,
+        panel: common.colors.grays[300],
+        text: common.colors.black,
+    },
     link: '#0072bc',
     hoverLink: '#357BC2',
-    primary: '#357BC2',
-    primaryText: WHITE,
-    hoverPrimary: '#4b87c4',
-    hoverPrimaryText: 'white',
-    default: '#ddd',
-    defaultText: 'black',
-    hoverDefault: '#eee',
-    hoverDefaultText: 'black',
-    error: '#D90000',
-    errorText: WHITE,
-    hoverError: '#d92929',
-    hoverErrorText: WHITE,
-    warning: '#ECB100',
-    warningText: WHITE,
-    hoverWarning: '#edbb24',
-    hoverWarningText: WHITE,
-    info: '#35b6c2',
-    infoText: WHITE,
-    hoverInfo: '#59b9c2',
-    hoverInfoText: WHITE,
-    success: '#00AA80',
-    successText: WHITE,
-    hoverSuccess: '#00BB90',
-    hoverSuccessText: WHITE,
-    ...common
 }
 export const darkTheme = {
-    body: '#2b2b2b',
-    panel: '#393939',
-    text: WHITE,
+    ...common,
+    colors: {
+        ...common.colors,
+        body: common.colors.grays[900],
+        panel: common.colors.grays[800],
+        text: common.colors.white,
+    },
     link: '#0072bc',
-    primary: '#357BC2',
-    primaryText: WHITE,
-    hoverPrimary: '#4b87c4',
-    hoverPrimaryText: WHITE,
-    default: '#555',
-    defaultText: WHITE,
-    hoverDefault: '#777',
-    hoverDefaultText: WHITE,
-    error: '#D90000',
-    errorText: WHITE,
-    hoverError: '#d92929',
-    hoverErrorText: WHITE,
-    warning: '#ECB100',
-    warningText: WHITE,
-    hoverWarning: '#edbb24',
-    hoverWarningText: WHITE,
-    info: '#35b6c2',
-    infoText: WHITE,
-    hoverInfo: '#59b9c2',
-    hoverInfoText: WHITE,
-    success: '#00AA80',
-    successText: WHITE,
-    hoverSuccess: '#00BB90',
-    hoverSuccessText: WHITE,
-    ...common
-}
-
-export const getBackground = (theme, variant) => {
-    switch (variant) {
-        case "primary":
-            return theme.primary;
-        case "error":
-            return theme.error;
-        case "warning":
-            return theme.warning;
-        case "info":
-            return theme.info;
-        case "success":
-            return theme.success;
-        default:
-            return theme.default;
-    }
-}
-
-export const getColor = (theme, variant) => {
-    switch (variant) {
-        case "primary":
-            return theme.primaryText;
-        case "error":
-            return theme.errorText;
-        case "warning":
-            return theme.warningText;
-        case "info":
-            return theme.infoText;
-        case "success":
-            return theme.successText;
-        default:
-            return theme.defaultText;
-    }
-}
-
-export const getHoverBackground = (theme, variant) => {
-    switch (variant) {
-        case "primary":
-            return theme.hoverPrimary;
-        case "error":
-            return theme.hoverError;
-        case "warning":
-            return theme.hoverWarning;
-        case "info":
-            return theme.hoverInfo;
-        case "success":
-            return theme.hoverSuccess;
-        default:
-            return theme.hoverDefault;
-    }
-}
-
-export const getHoverColor = (theme, variant) => {
-    switch (variant) {
-        case "primary":
-            return theme.hoverPrimaryText;
-        case "error":
-            return theme.hoverErrorText;
-        case "warning":
-            return theme.hoverWarningText;
-        case "info":
-            return theme.hoverInfoText;
-        case "success":
-            return theme.hoverSuccessText;
-        default:
-            return theme.hoverDefaultText;
-    }
+    hoverLink: '#357BC2',
 }

@@ -1,6 +1,6 @@
-import React, { createContext, useReducer, useContext, useEffect, useState } from "react";
-import { UserManager, WebStorageStateStore, Log as OidcLogger } from "oidc-client-ts";
-import { useAppContext, ADD_MESSAGE } from "./ApplicationProvider";
+import React, { createContext, useReducer, useContext, useEffect, useState } from "react"
+import { UserManager, WebStorageStateStore, Log as OidcLogger } from "oidc-client-ts"
+import { useNotificationContext, INFO, DANGER, WARNING } from "./NotificationProvider"
 import axios from "axios";
 
 export const SET_CLIENT_CONFIGURATION = "SET_CLIENT_CONFIGURATION";
@@ -22,6 +22,7 @@ export const SET_ICON = "SET_ICON";
 export const RETURN_URL = "RETURN_URL";
 
 const userStore = window.localStorage;
+const locationStore = window.sessionStorage;
 
 const parseJwt = token => {
     const base64Url = token.split(".")[1];
@@ -79,7 +80,7 @@ export const AuthContext = createContext(initialState);
 export const AuthConsumer = AuthContext.Consumer;
 export const AuthProvider = props => {
     const [config, setConfig] = useState(null);
-    const [, appDispatch] = useAppContext();
+    const { addNotification } = useNotificationContext();
     const store = useReducer(
         reducer,
         initialState
@@ -113,27 +114,27 @@ export const AuthProvider = props => {
             });
             userManager.events.addUserUnloaded(() => {
                 dispatch({ type: USER_EXPIRED });
-                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Informace o přihlášení jsou neplatné.", dismissible: true, expiration: 3 });
+                addNotification(<p>Informace o přihlášení jsou neplatné.</p>, INFO, true, 5);
                 console.info("Informace o přihlášení jsou neplatné.");
             });
             userManager.events.addAccessTokenExpiring(() => {
                 dispatch({ type: USER_EXPIRING });
-                appDispatch({ type: ADD_MESSAGE, variant: "warning", text: "Platnost přihlášení brzy vyprší.", dismissible: true, expiration: 3 });
+                addNotification(<p>Platnost přihlášení brzy vyprší.</p>, WARNING, true, 3);
                 console.info("Platnost přihlášení brzy vyprší.");
             });
             userManager.events.addAccessTokenExpired(() => {
                 dispatch({ type: USER_EXPIRED });
-                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Platnost přihlášení vypršela.", dismissible: true, expiration: 3 });
+                addNotification(<p>Platnost přihlášení vypršela.</p>, INFO, true, 3);
                 console.info("Platnost přihlášení vypršela.");
             });
             userManager.events.addSilentRenewError(() => {
                 dispatch({ type: SILENT_RENEW_ERROR });
-                appDispatch({ type: ADD_MESSAGE, variant: "error", text: "Nepodařilo se obnovit přihlášení.", dismissible: true, expiration: 3 });
+                addNotification(<p>Nepodařilo se obnovit přihlášení.</p>, DANGER, true, 10);
                 console.info("Nepodařilo se obnovit přihlášení.");
             });
             userManager.events.addUserSignedOut(() => {
                 dispatch({ type: USER_EXPIRED });
-                appDispatch({ type: ADD_MESSAGE, variant: "info", text: "Uživatel byl odhlášen.", dismissible: true, expiration: 3 });
+                addNotification(<p>Uživatel byl odhlášen.</p>, INFO, true, 3);
                 console.info("Uživatel byl odhlášen.");
             });
             userManager.getUser()
@@ -154,14 +155,14 @@ export const AuthProvider = props => {
                     }
                 })
                 .catch(() => {
-                    appDispatch({ type: ADD_MESSAGE, variant: "error", text: "Při získávání údajů o uživateli došlo k chybě.", dismissible: true, expiration: 3 });
+                    addNotification(<p>Při získávání údajů o uživateli došlo k chybě.</p>, DANGER, true, 3);
                     dispatch({
                         type: LOAD_USER_ERROR
                     });
                 });
             dispatch({ type: SET_USER_MANAGER, payload: userManager });
         }   
-    }, [config, dispatch, appDispatch]);
+    }, [config, dispatch, addNotification]);
     return (
         <AuthContext.Provider value={store}>
             {props.children}

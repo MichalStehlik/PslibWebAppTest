@@ -6,6 +6,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { ErrorBoundary } from 'react-error-boundary'
 import { ApplicationProvider } from "./providers/ApplicationProvider"
+import { NotificationProvider } from "./providers/NotificationProvider"
 import { AuthProvider } from "./providers/AuthProvider"
 import { ErrorFallback } from "./pages/ErrorFallback";
 
@@ -14,13 +15,15 @@ const rootElement = document.getElementById('root');
 
 ReactDOM.render(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <ApplicationProvider>
-            <AuthProvider>
-                <BrowserRouter basename={baseUrl}>
-                    <App />
-                </BrowserRouter>
-            </AuthProvider>
-        </ApplicationProvider>
+        <NotificationProvider>
+            <ApplicationProvider>
+                <AuthProvider>
+                    <BrowserRouter basename={baseUrl}>
+                        <App />
+                    </BrowserRouter>
+                </AuthProvider>
+            </ApplicationProvider>
+        </NotificationProvider>
     </ErrorBoundary>,
     rootElement);
 

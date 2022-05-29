@@ -1,28 +1,24 @@
-import { Alert, Button } from "../../ui-components";
-import { useAppContext, ADD_MESSAGE } from "../../providers/ApplicationProvider";
+import { Button, Panel } from "../../ui-components";
+import { useNotificationContext, INFO, DANGER, WARNING, SUCCESS, DEFAULT } from "../../providers/NotificationProvider";
 
 export const Home = () => {
-    const [, dispatch] = useAppContext();
+    const { addNotification } = useNotificationContext();
     return (
         <>
-            <Alert variant="error">This is not right!</Alert>
-            <Alert variant="warning">There might be something fishy.</Alert>
-            <Alert variant="info">Just to let you know.</Alert>
-            <Alert variant="success">That was great!</Alert>
-            <div>
+            <Panel bg={"grays.800"} p={ 10 } borderRadius="none">
                 <Button variant="">Default</Button>
                 <Button variant="primary">Primary</Button>
                 <Button variant="info">Info</Button>
-                <Button variant="error" >Error</Button>
+                <Button variant="danger" >Error</Button>
                 <Button variant="warning">Warning</Button>
                 <Button variant="success">Success</Button>
-            </div>
+            </Panel>
             <div>
-                <Button onClick={e => { dispatch({ type: ADD_MESSAGE, variant: "default", text: "Notifikace.", dismissible: true, expiration: 3 }) }}>Add Notification</Button>
-                <Button onClick={e => { dispatch({ type: ADD_MESSAGE, variant: "info", text: "Informace.", dismissible: true, expiration: 3 }) }}>Add Info</Button>
-                <Button onClick={e => { dispatch({ type: ADD_MESSAGE, variant: "error", text: "Tohle je nějaká chyba.", dismissible: true, expiration: 3 }) }}>Add Error</Button>
-                <Button onClick={e => { dispatch({ type: ADD_MESSAGE, variant: "warning", text: "Na tohle pozor.", dismissible: true, expiration: 3 }) }}>Add Warning</Button>
-                <Button onClick={e => { dispatch({ type: ADD_MESSAGE, variant: "success", text: "Konečně se něco povedlo.", dismissible: true, expiration: 3 }) }}>Add Success</Button>
+                <Button onClick={e => { addNotification(<p>Notifikace</p>, DEFAULT, true, 5); }}>Add Notification</Button>
+                <Button onClick={e => { addNotification(<p>Informace</p>, INFO, true, 5); }}>Add Info</Button>
+                <Button onClick={e => { addNotification(<p>Something bad happened.</p>, DANGER, true, 5); }}>Add Error</Button>
+                <Button onClick={e => { addNotification(<p>I warn you.</p>, WARNING, true, 5); }}>Add Warning</Button>
+                <Button onClick={e => { addNotification(<p>We did it.</p>, SUCCESS, true, 5); }}>Add Success</Button>
             </div>
         </>
     );

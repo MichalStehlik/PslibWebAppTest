@@ -1,18 +1,45 @@
-import styled from "styled-components"
-import { getBackground, getColor, Icon} from ".";
+import styled, { css } from "styled-components"
+import { Icon} from ".";
 
 const StyledAlert = styled.div`
-    border: 1px solid ${props => (getColor(props.theme, props.variant))};
+    border: 1px solid ${({ theme }) => theme.colors.white}};
     margin: 3px 0;
-    background-color: ${props => (getBackground(props.theme, props.variant))};
     padding: .5em;
-    color: ${props => (getColor(props.theme, props.variant))};
     border-radius: 4px;
     display: grid;
     grid-template-columns: 3em auto;
     grid-template-rows: auto auto;
     grid-template-areas: "icon header" "icon content";
-    gap: .3em; 
+    gap: .3em;
+    ${({ variant }) => {
+        switch (variant) {
+            case "primary": return css`
+            background-color: ${({ theme }) => theme.colors.primary.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "danger": return css`
+            background-color: ${({ theme }) => theme.colors.danger.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "success": return css`
+            background-color: ${({ theme }) => theme.colors.success.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "info": return css`
+            background-color: ${({ theme }) => theme.colors.info.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "warning": return css`
+            background-color: ${({ theme }) => theme.colors.warning.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            default: return css`
+            background-color: ${({ theme }) => theme.colors.default.default};
+            color:${({ theme }) => theme.colors.black};
+        `
+        }
+    }
+    }
 `;
 
 const StyledAlertHeading = styled.header`
@@ -22,6 +49,10 @@ const StyledAlertHeading = styled.header`
 `;
 const StyledAlertContent = styled.div`
     grid-area: content;
+    & > * {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 `;
 const StyledAlertIcon = styled.div`
     grid-area: icon;

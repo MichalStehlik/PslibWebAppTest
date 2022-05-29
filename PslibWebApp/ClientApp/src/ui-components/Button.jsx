@@ -1,12 +1,8 @@
-import styled from "styled-components"
-import { space, layout, color, variant } from 'styled-system'
-import { getBackground, getColor, getHoverBackground, getHoverColor } from ".";
+import styled, { css } from "styled-components"
 
 const StyledButton = styled.button`
     margin: 1px;
-    background-color: ${props => getBackground(props.theme, props.variant)};
     padding: .8em 2em;
-    color: ${props => getColor(props.theme, props.variant)};
     text-decoration: none;
     text-transform: uppercase;
     font-size: 12px;
@@ -16,14 +12,57 @@ const StyledButton = styled.button`
     border: 0;
     cursor: pointer;
     font-weight: bold;
-    display: ${props => props.block ? "flex" : "inline-flex"};
-    ${space}
-    ${layout}
-    ${color}
-    &:hover {
-        background-color: ${props => getHoverBackground(props.theme, props.variant)};
-        color: ${props => getHoverColor(props.theme, props.variant)};
+    display: ${props => props.block ? "block" : "inline-block"};
+    ${({ variant }) => {
+    switch (variant)
+    {
+        case "primary": return css`
+            background-color: ${({ theme }) => theme.colors.primary.default};
+            color:${({ theme }) => theme.colors.white};
+            &:hover {
+                background-color:${({ theme }) => theme.colors.primary.light}
+            }
+        `
+        case "danger": return css`
+            background-color: ${({ theme }) => theme.colors.danger.default};
+            color:${({ theme }) => theme.colors.white};
+            &:hover {
+                background-color:${({ theme }) => theme.colors.danger.light}
+            }
+        `
+        case "success": return css`
+            background-color: ${({ theme }) => theme.colors.success.default};
+            color:${({ theme }) => theme.colors.white};
+            &:hover {
+                background-color:${({ theme }) => theme.colors.success.light}
+            }
+        `
+        case "info": return css`
+            background-color: ${({ theme }) => theme.colors.info.default};
+            color:${({ theme }) => theme.colors.white};
+            &:hover {
+                background-color:${({ theme }) => theme.colors.info.light}
+            }
+        `
+        case "warning": return css`
+            background-color: ${({ theme }) => theme.colors.warning.default};
+            color:${({ theme }) => theme.colors.white};
+            &:hover {
+                background-color:${({ theme }) => theme.colors.warning.light}
+            }
+        `
+        default: return css`
+            background-color: ${({ theme }) => theme.colors.default.default};
+            color:${({ theme }) => theme.colors.black};
+            &:hover {
+                background-color:${({ theme }) => theme.colors.default.light}
+            }
+        `
+        }
     }
+    }
+    background-color: ${props => props.bg};
+    color: ${props => props.color};
 `;
 
 export const Button = (props) => (<StyledButton {...props} />)

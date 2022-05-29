@@ -16,10 +16,14 @@ export const FontStyles = createGlobalStyle`
 
 export const GlobalStyles = createGlobalStyle`
     body {
-        background: ${({ theme }) => theme.body};
-        color: ${({ theme }) => theme.text};
+        background: ${({ theme }) => theme.colors.body};
+        color: ${({ theme }) => theme.colors.text};
         font-family: 'Open Sans', sans-serif;
         font-size: 12px;
+        transition: color 0.3s linear, background-color 0.3s linear;
+        margin: 0;
+    }
+    body * {
         transition: color 0.3s linear, background-color 0.3s linear;
     }
     img {
@@ -33,12 +37,12 @@ export const GlobalStyles = createGlobalStyle`
         line-height: 1.6;
     }
     a {
-        color: ${({ theme }) => theme.link};
+        color: ${({ theme }) => theme.colors.link};
         text-decoration: underline;
     }
     a:hover {
         text-decoration: none;
-        color: ${({ theme }) => theme.hoverLink};
+        color: ${({ theme }) => theme.colors.hoverLink};
     }
     h1, h2, h3, h4, h5 {
         padding: 0px;

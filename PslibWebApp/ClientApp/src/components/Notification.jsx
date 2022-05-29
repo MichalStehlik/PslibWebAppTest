@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import ReactDOM from "react-dom"
-import { useAppContext, DISMISS_MESSAGE } from "../providers/ApplicationProvider";
+import { useNotificationContext } from "../providers/NotificationProvider";
 import styled, { keyframes } from "styled-components"
 import { Alert } from "../ui-components"
 
@@ -11,6 +11,16 @@ const slideIn = keyframes`
 
     to {
         transform: translateX(0);
+    }
+`;
+
+const slideOut = keyframes`
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(100%);
     }
 `;
 
@@ -29,17 +39,17 @@ const StyledNotificationContainer = styled.div`
 `;
 
 export const NotificationContainer = ({ variant, children, ...rest }) => {
-    const [{ messages }, dispatch] = useAppContext();
+    const { notifications } = useNotificationContext();
     return ReactDOM.createPortal(
         <StyledNotificationContainer {...rest} >
-            {messages.slice(-5).map((item, index) => (
+            {notifications.slice(-5).map((item, index) => (
                 <Notification
                     key={index}
+                    index={ index }
                     variant={item.variant}
                     dismissible={item.dismissible}
                     expiration={item.expiration}
-                    dismiss={() => dispatch({ type: DISMISS_MESSAGE, id: index })}
-                >{item.text}</Notification>
+                >{item.content}</Notification>
             ))}
         </StyledNotificationContainer>,
         document.querySelector("#notifications")
@@ -48,7 +58,6 @@ export const NotificationContainer = ({ variant, children, ...rest }) => {
 
 const StyledDismissButton = styled.span`
 font-size: 12px;
-fill: "white";
 margin: 3px;
 cursor: default;
 position: absolute;
@@ -58,24 +67,33 @@ padding: .5em;
 pointer-events: auto;
 `;
 
-const DismissButton = props => {
-    return (
-        <StyledDismissButton onClick={props.dismiss}>&#10006;</StyledDismissButton>
-    );
-}
-
 const StyledNotification = styled(Alert)`
     max-width: 430px;
     max-height: 200px;
     padding-right: 3em;
     position: relative;
-    animation: ${slideIn} .3s linear;
+    animation: ${props => props.visible ? slideIn : slideOut} .4s ease-out;
 `;
 
-const Notification = ({ children, dismissible, dismiss, expiration, ...rest }) => (
-    <StyledNotification {...rest}>
-        {children}
-        {(dismissible === true && dismiss) ? <DismissButton dismiss={dismiss} /> : ""}
-    </StyledNotification>)
+const Notification = ({ children, dismissible, expiration, index, ...rest }) => {
+    const [isVisible, setIsVisible] = useState(true);
+    const { removeNotification } = useNotificationContext();
+    useEffect(() => {
+        if (!isVisible) {
+            const timeoutId = setTimeout(
+                () => { removeNotification(index) },
+                300);
+            return () => {
+                clearTimeout(timeoutId);
+            };
+        }
+    },[isVisible, removeNotification, index]);
+    return (
+        <StyledNotification visible={isVisible} {...rest}>
+            {children}
+            {(dismissible === true) ? <StyledDismissButton onClick={() => { setIsVisible(false); /*removeNotification(index)*/}}>&#10006;</StyledDismissButton> : ""}
+        </StyledNotification>
+        ); 
+}
 
 export default NotificationContainer;

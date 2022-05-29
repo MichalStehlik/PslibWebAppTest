@@ -3,9 +3,6 @@ import axios from "axios";
 import { useThemeDetector } from "../ui-components";
 
 export const SET_TITLE = "SET_TITLE";
-export const ADD_MESSAGE = "ADD_MESSAGE";
-export const DISMISS_MESSAGE = "DISMISS_MESSAGE";
-export const CLEAR_MESSAGES = "CLEAR_MESSAGES";
 export const SET_THEME = "SET_THEME";
 export const SET_DEFAULT_THEME = "SET_DEFAULT_THEME";
 export const SET_APPLICATION_BUSY = "SET_APPLICATION_BUSY";
@@ -22,29 +19,12 @@ const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").
 const getStoredTheme = () => localStorage.getItem(THEME_STORAGE_ID);
 
 const reducer = (state, action) => {
-    var newMessages = [...state.messages];
     switch (action.type) {
         case SET_THEME: {
             return { ...state, theme: action.payload };
         }
         case SET_DEFAULT_THEME: {
             return { ...state, defaultTheme: action.payload };
-        }
-        case ADD_MESSAGE: {
-            newMessages.push({
-                variant: action.variant,
-                text: action.text,
-                dismissible: action.dismissible === true,
-                expiration: action.expiration ? action.expiration : null
-            });
-            return { ...state, messages: newMessages, messageCounter: newMessages.length };
-        }
-        case DISMISS_MESSAGE: {
-            newMessages.splice(action.id, 1);
-            return { ...state, messages: newMessages, messageCounter: newMessages.length };
-        }
-        case CLEAR_MESSAGES: {
-            return { ...state, messages: [], messageCounter: 0 };
         }
         case SET_TITLE: {
             return { ...state, title: action.payload };
@@ -66,8 +46,6 @@ const reducer = (state, action) => {
 
 const initialState = {
     title: null,
-    messages: [],
-    messageCounter: 0,
     theme: (getCurrentTheme() ? THEME_DARK : THEME_LIGHT),
     defaultTheme: getStoredTheme() || THEME_AUTO,
     applicationBusy: false,
