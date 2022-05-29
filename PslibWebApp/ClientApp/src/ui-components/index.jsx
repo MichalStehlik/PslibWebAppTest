@@ -5,6 +5,7 @@ export { FontStyles } from './GlobalStyles'
 export { GlobalStyles } from './GlobalStyles'
 export { Icon } from './Icon'
 export { Menu, MenuBlock, MenuItem } from './Menu'
+export { Modal, ModalHeader, ModalBody, ModalFooter } from './Modal'
 export { Panel } from "./Panel"
 export { Spinner } from "./Spinner"
 export { default as ThemeProvider } from './ThemeProvider'

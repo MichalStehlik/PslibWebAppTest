@@ -54,6 +54,11 @@ export const lightTheme = {
         body: common.colors.white,
         panel: common.colors.grays[300],
         text: common.colors.black,
+        shadow: common.colors.white,
+        default: {
+            default: '#ddd',
+            light: '#eee',
+        }
     },
     link: '#0072bc',
     hoverLink: '#357BC2',
@@ -64,7 +69,12 @@ export const darkTheme = {
         ...common.colors,
         body: common.colors.grays[900],
         panel: common.colors.grays[800],
-        text: common.colors.white,
+        text: common.colors.grays[100],
+        shadow: common.colors.black,
+        default: {
+            default: common.colors.grays[700],
+            light: common.colors.grays[600],
+        }
     },
     link: '#0072bc',
     hoverLink: '#357BC2',
