@@ -81,10 +81,13 @@ export const ModalFooter = styled.footer`
     justify-content: center;
     gap: 4px;
     padding: .5rem;
+    flex: none;
 `;
 
 export const ModalHeader = styled.header`
     padding: .5rem;
+    font-weight: 700;
+    flex: none;
 `;
 
 export const ModalBody = styled.div`
@@ -92,6 +95,7 @@ export const ModalBody = styled.div`
     padding: .5rem;
     background-color: black;
     border-radius: 4px;
+    flex: auto;
     ${({ variant }) => {
         switch (variant) {
             case "primary": return css`
