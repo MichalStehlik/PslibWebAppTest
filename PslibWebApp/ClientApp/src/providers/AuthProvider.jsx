@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect, useState } from "react"
 import { UserManager, WebStorageStateStore, Log as OidcLogger } from "oidc-client-ts"
-import { useNotificationContext, INFO, DANGER, WARNING } from "./NotificationProvider"
+import { useAppContext, ADD_NOTIFICATION, NOTIFICATION_INFO, NOTIFICATION_DANGER, NOTIFICATION_WARNING } from "./ApplicationProvider"
 import axios from "axios";
 
 export const SET_CLIENT_CONFIGURATION = "SET_CLIENT_CONFIGURATION";
@@ -80,7 +80,7 @@ export const AuthContext = createContext(initialState);
 export const AuthConsumer = AuthContext.Consumer;
 export const AuthProvider = props => {
     const [config, setConfig] = useState(null);
-    const { addNotification } = useNotificationContext();
+    const [, appDispatch] = useAppContext();
     const store = useReducer(
         reducer,
         initialState
@@ -98,6 +98,7 @@ export const AuthProvider = props => {
                 ...config,
                 userStore: new WebStorageStateStore({ store: userStore }),
             }
+            console.log("starting");
             let userManager = new UserManager(extendedConfig);
             OidcLogger.setLogger(console);
             OidcLogger.setLevel(OidcLogger.DEBUG);
@@ -114,27 +115,57 @@ export const AuthProvider = props => {
             });
             userManager.events.addUserUnloaded(() => {
                 dispatch({ type: USER_EXPIRED });
-                addNotification(<p>Informace o přihlášení jsou neplatné.</p>, INFO, true, 5);
+                appDispatch({
+                    type: ADD_NOTIFICATION,
+                    content: <p>Informace o přihlášení jsou neplatné.</p>,
+                    variant: NOTIFICATION_INFO,
+                    dismissible: true,
+                    expiration: 5
+                });
                 console.info("Informace o přihlášení jsou neplatné.");
             });
             userManager.events.addAccessTokenExpiring(() => {
                 dispatch({ type: USER_EXPIRING });
-                addNotification(<p>Platnost přihlášení brzy vyprší.</p>, WARNING, true, 3);
+                appDispatch({
+                    type: ADD_NOTIFICATION,
+                    content: <p>Platnost přihlášení brzy vyprší.</p>,
+                    variant: NOTIFICATION_WARNING,
+                    dismissible: true,
+                    expiration: 5
+                });
                 console.info("Platnost přihlášení brzy vyprší.");
             });
             userManager.events.addAccessTokenExpired(() => {
                 dispatch({ type: USER_EXPIRED });
-                addNotification(<p>Platnost přihlášení vypršela.</p>, INFO, true, 3);
+                appDispatch({
+                    type: ADD_NOTIFICATION,
+                    content: <p>Platnost přihlášení vypršela.</p>,
+                    variant: NOTIFICATION_INFO,
+                    dismissible: true,
+                    expiration: 5
+                });
                 console.info("Platnost přihlášení vypršela.");
             });
             userManager.events.addSilentRenewError(() => {
                 dispatch({ type: SILENT_RENEW_ERROR });
-                addNotification(<p>Nepodařilo se obnovit přihlášení.</p>, DANGER, true, 10);
+                appDispatch({
+                    type: ADD_NOTIFICATION,
+                    content: <p>Nepodařilo se obnovit přihlášení.</p>,
+                    variant: NOTIFICATION_DANGER,
+                    dismissible: true,
+                    expiration: 10
+                });
                 console.info("Nepodařilo se obnovit přihlášení.");
             });
             userManager.events.addUserSignedOut(() => {
                 dispatch({ type: USER_EXPIRED });
-                addNotification(<p>Uživatel byl odhlášen.</p>, INFO, true, 3);
+                appDispatch({
+                    type: ADD_NOTIFICATION,
+                    content: <p>Uživatel byl odhlášen.</p>,
+                    variant: NOTIFICATION_INFO,
+                    dismissible: true,
+                    expiration: 5
+                });
                 console.info("Uživatel byl odhlášen.");
             });
             userManager.getUser()
@@ -155,14 +186,20 @@ export const AuthProvider = props => {
                     }
                 })
                 .catch(() => {
-                    addNotification(<p>Při získávání údajů o uživateli došlo k chybě.</p>, DANGER, true, 3);
+                    appDispatch({
+                        type: ADD_NOTIFICATION,
+                        content: <p>Při získávání údajů o uživateli došlo k chybě.</p>,
+                        variant: NOTIFICATION_DANGER,
+                        dismissible: true,
+                        expiration: 5
+                    });
                     dispatch({
                         type: LOAD_USER_ERROR
                     });
                 });
             dispatch({ type: SET_USER_MANAGER, payload: userManager });
         }   
-    }, [config, dispatch, addNotification]);
+    }, [config, dispatch, appDispatch]);
     return (
         <AuthContext.Provider value={store}>
             {props.children}

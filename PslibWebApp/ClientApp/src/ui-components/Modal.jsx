@@ -62,39 +62,16 @@ const ModalOverlay = props => {
 }
 
 const StyledModalWindow = styled.div`
-    overflow: hidden;
+    overflow: auto;
     background-color: ${props => props.theme.colors.body};
     color: ${props => props.theme.colors.text};
-    border: ${props => props.theme.colors.text} 2px solid;
-    max-height: 100vh;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
     border-radius: 4px;
     animation: ${props => props.active ? slideIn : slideOut} .4s ease-out;
-    ${({ variant }) => {
-        switch (variant) {
-            case "primary": return css`
-            border-color: ${({ theme }) => theme.colors.primary.default};
-        `
-            case "danger": return css`
-            border-color: ${({ theme }) => theme.colors.danger.default};
-        `
-            case "success": return css`
-            border-color: ${({ theme }) => theme.colors.success.default};
-        `
-            case "info": return css`
-            border-color: ${({ theme }) => theme.colors.info.default};
-        `
-            case "warning": return css`
-            border-color: ${({ theme }) => theme.colors.warning.default};
-        `
-            default: return css`
-            border-color: ${({ theme }) => theme.colors.default.default};
-        `
-    }
-    }}
 `;
 
 export const ModalFooter = styled.footer`
@@ -107,26 +84,43 @@ export const ModalFooter = styled.footer`
 `;
 
 export const ModalHeader = styled.header`
-    position: relative;
     padding: .5rem;
-    & * {
-        padding: 0;
-    }
-    &::after {
-        content: "";
-        background: black;
-        position: absolute;
-        bottom: 0;
-        left: .5rem;
-        height: 1px;
-        right: .5rem;
-    }
-
 `;
 
 export const ModalBody = styled.div`
+    margin: .5rem;
     padding: .5rem;
-    padding-bottom: 0;
+    background-color: black;
+    border-radius: 4px;
+    ${({ variant }) => {
+        switch (variant) {
+            case "primary": return css`
+            background-color: ${({ theme }) => theme.colors.primary.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "danger": return css`
+            background-color: ${({ theme }) => theme.colors.danger.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "success": return css`
+            background-color: ${({ theme }) => theme.colors.success.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "info": return css`
+            background-color: ${({ theme }) => theme.colors.info.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            case "warning": return css`
+            background-color: ${({ theme }) => theme.colors.warning.default};
+            color:${({ theme }) => theme.colors.white};
+        `
+            default: return css`
+            background-color: ${({ theme }) => theme.colors.default.default};
+            color:${({ theme }) => theme.colors.black};
+        `
+        }
+    }
+    }
 `;
 
 StyledModalWindow.defaultProps = {

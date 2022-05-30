@@ -1,13 +1,14 @@
 import { useState } from "react"
 import { Button, Panel, Modal, ModalFooter, ModalHeader, ModalBody, Icon } from "../../ui-components";
-import { useNotificationContext, INFO, DANGER, WARNING, SUCCESS, DEFAULT } from "../../providers/NotificationProvider";
+import { useAppContext, ADD_NOTIFICATION, NOTIFICATION_DEFAULT, NOTIFICATION_INFO, NOTIFICATION_DANGER, NOTIFICATION_WARNING, NOTIFICATION_SUCCESS } from "../../providers/ApplicationProvider"
+
 
 export const Home = () => {
-    const { addNotification } = useNotificationContext();
+    const [, dispatch] = useAppContext();
     const [dialog, setDialog] = useState(false);
     return (
         <>
-            <Panel bg={"grays.800"} p={ 10 } borderRadius="none">
+            <Panel p={ 10 } borderRadius="none">
                 <Button variant="">Default</Button>
                 <Button variant="primary">Primary</Button>
                 <Button variant="info">Info</Button>
@@ -19,20 +20,60 @@ export const Home = () => {
             <h2>Podnadpis</h2>
             <h3>Nadpis</h3>
             <div>
-                <Button onClick={e => { addNotification(<p>Notifikace</p>, DEFAULT, true, 5); }}>Add Notification</Button>
-                <Button onClick={e => { addNotification(<p>Informace</p>, INFO, true, 5); }}>Add Info</Button>
-                <Button onClick={e => { addNotification(<p>Something bad happened.</p>, DANGER, true, 5); }}>Add Error</Button>
-                <Button onClick={e => { addNotification(<p>I warn you.</p>, WARNING, true, 5); }}>Add Warning</Button>
-                <Button onClick={e => { addNotification(<p>We did it.</p>, SUCCESS, true, 5); }}>Add Success</Button>
+                <Button onClick={e => {
+                    dispatch({
+                        type: ADD_NOTIFICATION,
+                        content: <p>Notifikace</p>,
+                        variant: NOTIFICATION_DEFAULT,
+                        dismissible: true,
+                        expiration: 5
+                    });
+                }}>Add Notification</Button>
+                <Button onClick={e => {
+                    dispatch({
+                        type: ADD_NOTIFICATION,
+                        content: <p>Something bad, bad just happened! Everyone start panicking now!</p>,
+                        variant: NOTIFICATION_DANGER,
+                        dismissible: true,
+                        expiration: 5
+                    });
+                }}>Add Error</Button>
+                <Button onClick={e => {
+                    dispatch({
+                        type: ADD_NOTIFICATION,
+                        content: <p>I am informing you about something that just happened.</p>,
+                        variant: NOTIFICATION_INFO,
+                        dismissible: true,
+                        expiration: 5
+                    });
+                }}>Add Info</Button>
+                <Button onClick={e => {
+                    dispatch({
+                        type: ADD_NOTIFICATION,
+                        content: <p>Do not go further. Dark omen looms there.</p>,
+                        variant: NOTIFICATION_WARNING,
+                        dismissible: true,
+                        expiration: 5
+                    });
+                }}>Add Warning</Button>
+                <Button onClick={e => {
+                    dispatch({
+                        type: ADD_NOTIFICATION,
+                        content: <p>We did it.</p>,
+                        variant: NOTIFICATION_SUCCESS,
+                        dismissible: true,
+                        expiration: 5
+                    });
+                }}>Add Success</Button>
             </div>
             <div>
                 <Button onClick={e => { setDialog(true)}}>Dialog</Button>
             </div>
             <Modal active={dialog} onDismiss={() => { setDialog(false) }} variant="danger">
-                <ModalHeader variant="danger">
-                    <h2><Icon icon="cross" size="1em" /> Dialog</h2>
+                <ModalHeader>
+                    Dialog
                 </ModalHeader>
-                <ModalBody>
+                <ModalBody variant="danger">
                     <p>I was once told by a very wise man ...</p>
                 </ModalBody>
                 <ModalFooter>

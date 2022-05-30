@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useCallback } from "react";
 
 export const NotificationContext = createContext();
 export const NotificationConsumer = NotificationContext.Consumer;
@@ -11,12 +11,11 @@ export const SUCCESS = "success"
 
 export const NotificationProvider = props => {
     const [notifications, setNotifications] = useState([]);
-    const addNotification = (content, variant = DEFAULT, dismissible = true, expiration = null) => {
-        let newNotifications = [...notifications, {
-            variant, content, dismissible, expiration
-        }];
+    const addNotification = useCallback((content, variant = DEFAULT, dismissible = true, expiration = null) => {
+        let newNotifications = [...notifications];
+        newNotifications.push({variant, content, dismissible, expiration});
         setNotifications(newNotifications);
-    };
+    },[]);
     const removeNotification = (index) => {
         var newNotifications = [...notifications];
         newNotifications.splice(index, 1);

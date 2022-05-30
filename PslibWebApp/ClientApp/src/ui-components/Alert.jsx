@@ -63,7 +63,7 @@ const StyledAlertIcon = styled.div`
 export const Alert = ({ variant, children, heading, icon, ...rest }) => {
     if (!heading) {
         switch (variant) {
-            case "error": heading = "Chyba"; break;
+            case "danger": heading = "Chyba"; break;
             case "warning": heading = "Varování"; break;
             case "info": heading = "Informace"; break;
             case "success": heading = "Potvrzení"; break;
@@ -72,7 +72,7 @@ export const Alert = ({ variant, children, heading, icon, ...rest }) => {
     }
     if (!icon) {
         switch (variant) {
-            case "error": icon = <Icon icon="cross" size="1.5em" />; break;
+            case "danger": icon = <Icon icon="cross" size="1.5em" />; break;
             case "warning": icon = <Icon icon="warning" size="1.5em" />; break;
             case "info": icon = <Icon icon="info" size="1.5em" />; break;
             case "success": icon = <Icon icon="checkmark" size="1.5em" />; break;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import ReactDOM from "react-dom"
-import { useNotificationContext } from "../providers/NotificationProvider";
+import { DISMISS_NOTIFICATION, useAppContext } from "../providers/ApplicationProvider";
 import styled, { keyframes } from "styled-components"
 import { Alert } from "../ui-components"
 
@@ -39,7 +39,7 @@ const StyledNotificationContainer = styled.div`
 `;
 
 export const NotificationContainer = ({ variant, children, ...rest }) => {
-    const { notifications } = useNotificationContext();
+    const [{ notifications}] = useAppContext();
     return ReactDOM.createPortal(
         <StyledNotificationContainer {...rest} >
             {notifications.slice(-5).map((item, index) => (
@@ -77,17 +77,17 @@ const StyledNotification = styled(Alert)`
 
 const Notification = ({ children, dismissible, expiration, index, ...rest }) => {
     const [isVisible, setIsVisible] = useState(true);
-    const { removeNotification } = useNotificationContext();
+    const [, dispatch] = useAppContext();
     useEffect(() => {
         if (!isVisible) {
             const timeoutId = setTimeout(
-                () => { removeNotification(index) },
+                () => { dispatch({ type: DISMISS_NOTIFICATION, index: index }) },
                 300);
             return () => {
                 clearTimeout(timeoutId);
             };
         }
-    },[isVisible, removeNotification, index]);
+    },[isVisible, dispatch, index]);
     return (
         <StyledNotification visible={isVisible} {...rest}>
             {children}
